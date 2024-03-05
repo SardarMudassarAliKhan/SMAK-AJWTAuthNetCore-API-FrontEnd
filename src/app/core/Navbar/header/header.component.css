@@ -1,0 +1,23 @@
+.bg-light
+{
+  background-color: #273c75 !important;
+}
+.navbarNavDropdown li
+{
+  padding: 0 10px;
+  color: #ffffff !important;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.nav-link
+{
+  color: #ffffff !important;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.navbar-brand
+{
+  color: #ffffff !important;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: large;
+  font-weight: 100;
+}
+

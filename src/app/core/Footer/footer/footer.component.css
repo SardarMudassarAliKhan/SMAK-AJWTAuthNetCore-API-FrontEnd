@@ -1,0 +1,9 @@
+.footer-baground
+{
+  background-color: #273c75 !important;
+  color: #ffffff !important;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  height: 450px;
+  padding-top: 20px;
+  padding-bottom: 0;
+}
