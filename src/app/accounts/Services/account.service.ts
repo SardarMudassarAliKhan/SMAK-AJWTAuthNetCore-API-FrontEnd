@@ -2,7 +2,7 @@ import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { AuthenticatedResponse } from '../../core/Models/AuthenticatedResponse';
-import { Observable, tap } from 'rxjs';
+import { Observable, interval, startWith, switchMap, tap } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -10,7 +10,10 @@ export class AccountService {
 
   private baseUrl = environment.apiUrl;
   constructor(
-    private httpclient: HttpClient) { }
+    private httpclient: HttpClient
+    ) {
+      this.startTokenRefreshTimer();
+     }
 
   login(model: any) : Observable<AuthenticatedResponse> {
     debugger;
@@ -26,7 +29,8 @@ export class AccountService {
     return this.httpclient.post<any>(this.baseUrl+'api/Token/refresh', {}).pipe(
       tap((response: any) => {
         if (response && response.accessToken) {
-          localStorage.setItem('accessToken', response.accessToken);
+          localStorage.setItem('token', response.accessToken);
+          localStorage.setItem('refreshToken', response.refreshToken);
         }
       })
     );
@@ -37,16 +41,32 @@ export class AccountService {
   }
 
   private setSession(authResult: any) {
-    localStorage.setItem('access_token', authResult.accessToken);
-    localStorage.setItem('refresh_token', authResult.refreshToken);
+    localStorage.setItem('token', authResult.accessToken);
+    localStorage.setItem('refreshToken', authResult.refreshToken);
   }
 
   getAccessToken(): any {
-    return localStorage.getItem('accessToken');
+    return localStorage.getItem('token');
   }
 
   isAuthenticated(): boolean {
-    const token = localStorage.getItem('access_token');
-    return token ? true : false;
+    const token = localStorage.getItem('token');
+    const refreshToken = localStorage.getItem('refreshToken');
+    return token && refreshToken ? true : false;
+  }
+
+  private startTokenRefreshTimer() {
+    // 30 minutes in milliseconds
+    const refreshTokenInterval = 30 * 60 * 1000;
+    // Use RxJS interval to create a timer that triggers token refresh
+    interval(refreshTokenInterval).pipe(
+      // Start immediately and then at the specified interval in milliseconds
+      startWith(0),
+      switchMap(() => this.refreshToken())
+    ).subscribe(() => {
+      console.log('Token refreshed successfully.');
+    }, (error) => {
+      console.error('Error refreshing token:', error);
+    });
   }
 }

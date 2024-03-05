@@ -62,7 +62,7 @@ export class LoginComponent {
   //implementing logout
   Logout() {
     debugger;
-    this.accountService.logOut();
+    this.accountService.logout();
     this.router.navigate(['/accounts', 'login']);
   }
 
